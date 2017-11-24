@@ -6,34 +6,56 @@
 	}
 
   var defaultValues = {
+    _targetClass: 'zoombox',
     containerId: 'zoombox-overlay',
     buttonClass: 'zoombox-close-btn',
     innerClass: 'zoombox-inner',
-    imageClass: 'img-responsive zoombox-image',
-    buttonContent: '&times;'
+    imageClass: 'zoombox-image',
+    listenKeys: true,
+    closeOnBackClick: true,
+    useDataSource: false,
+    theme: 'dark'
   }
 
   var createOverlay = function (options) {
+    if($('#'+options.containerId).length) destroyOverlay(options);
+
+    $(document.body).css('overflow','hidden');
+
     var tpl = '<div id="' + options.containerId + '">';
-    tpl += '<div class="' + options.buttonClass + '">' + options.buttonContent + '</div>';
+    tpl += '<div class="' + options.buttonClass + '">&times;</div>';
     tpl += '<div class="' + options.innerClass + '">';
     tpl += '</div>';
     tpl += '</div>';
 
     var elem = $(document.body).append(tpl).find('#'+options.containerId);
 
-    elem.on('click',function (event) {
-      return ($(event.target).is('img') ? false : destroyOverlay());
-    });
+    if(options.closeOnBackClick) {
+      elem.on('click',function (event) {
+        if(!$(event.target).is('img')) destroyOverlay(options);
+      })
+    } else {
+      elem.on('click',function (event) {
+        if($(event.target).is('.'+options.buttonClass)) destroyOverlay(options);
+      })
+    }
+
+    if(options.theme !== '') {
+      elem.addClass('theme-'+options.theme);
+    }
 
     return elem;
   }
 
-  var destroyOverlay = function () {
-    $('#zoombox-overlay').removeClass('in').one('transitionend',function () {
-      $(this).remove();
-    })
-    return true;
+  var destroyOverlay = function (options) {
+    if($('#'+options.containerId).length) {
+      $(document.body).css('overflow','').find('#'+options.containerId).removeClass('in').one('transitionend',function () {
+        $(this).remove();
+      })
+      return true;
+    } else {
+      return false;
+    }
   }
 
   $.fn.zoombox = function(options) {
@@ -48,7 +70,7 @@
     }
 
     this.each(function (index,element,array) {
-      var src = $(element).attr('src');
+      var src = (options.useDataSource ? $(element).data('src') : $(element).attr('src'));
 
       $(element).on('click',function (event) {
         var over = createOverlay(options);
@@ -59,7 +81,25 @@
       })
     })
 
+    if(options.listenKeys) {
+      $(document).on('keyup',function (event) {
+        if(event.key === 'Escape') {
+          destroyOverlay(options);
+        } else if(event.key === 'ArrowRight') {
+
+        } else if(event.key === 'ArrowLeft') {
+
+        }
+      })
+    }
+
     return this;
   };
+
+  if(!window.preventAutoZoom) {
+    $(function () {
+      $('.'+defaultValues._targetClass).zoombox();
+    })
+  }
 
 }( jQuery ));

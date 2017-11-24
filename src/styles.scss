@@ -4,7 +4,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 99999;
+  z-index: 9999;
+  padding: 15px;
+
+  @media (min-width: 768px) {
+    padding: 25px 50px;
+  }
 
   display: flex;
   flex-direction: column;
@@ -21,15 +26,64 @@
   & > .zoombox-close-btn {
     position: absolute;
     right: 15px;
-    top: 0px;
+    top: 15px;
+    width: 30px;
+    height: 30px;
+
+    text-align: center;
+    line-height: 30px;
     font-size: 30px;
     cursor: pointer;
+    z-index: 10000;
+
+    color: inherit;
   }
 
   & > .zoombox-inner {
 
     & > img.zoombox-image {
+      max-width: 100%;
+      height: auto;
+    }
+  }
 
+  &.theme-lightest {
+    background-color: rgba(255,255,255,0.7);
+
+    & > .zoombox-close-btn {
+      color: #333333;
+    }
+  }
+
+  &.theme-lighter {
+    background-color: rgba(255,255,255,0.5);
+
+    & > .zoombox-close-btn {
+      color: #3a3a3a;
+    }
+  }
+
+  &.theme-light {
+    background-color: rgba(255,255,255,0.3);
+  }
+
+  &.theme-dark {
+    background-color: rgba(0,0,0,0.3);
+  }
+
+  &.theme-darker {
+    background-color: rgba(0,0,0,0.5);
+
+    & > .zoombox-close-btn {
+      color: #dbdbdb;
+    }
+  }
+
+  &.theme-darkest {
+    background-color: rgba(0,0,0,0.7);
+
+    & > .zoombox-close-btn {
+      color: #e5e5e5;
     }
   }
 }
