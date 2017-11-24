@@ -1,0 +1,19 @@
+{
+  "name": "zoombox.js",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/zoombox.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MCStreetguy/ZoomBox.js.git"
+  },
+  "author": "Maximilian Schmidt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MCStreetguy/ZoomBox.js/issues"
+  },
+  "homepage": "https://github.com/MCStreetguy/ZoomBox.js#readme"
+}
