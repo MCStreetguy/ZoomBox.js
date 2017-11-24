@@ -26,7 +26,7 @@
     cursor: pointer;
     z-index: 10000;
 
-    color: inherit;
+    color: #333;
   }
 
   & > .zoombox-inner {
@@ -53,11 +53,13 @@
       position: absolute;
       top: calc(50% - 25px);
       height: 50px;
-      width: 50px;
+      width: 40px;
+      padding: 0;
       z-index: 1;
       background: none;
       border: none;
       outline: none;
+      cursor: pointer;
 
       &.slick-prev {
         left: 0;
@@ -80,6 +82,10 @@
     & > .zoombox-close-btn {
       color: #333333;
     }
+
+    & .slick-arrow > svg {
+      fill: #333333;
+    }
   }
 
   &.theme-lighter {
@@ -88,14 +94,26 @@
     & > .zoombox-close-btn {
       color: #3a3a3a;
     }
+
+    & .slick-arrow > svg {
+      fill: #3a3a3a;
+    }
   }
 
   &.theme-light {
     background-color: rgba(255,255,255,0.3);
+
+    & .slick-arrow > svg {
+      fill: #333;
+    }
   }
 
   &.theme-dark {
     background-color: rgba(0,0,0,0.3);
+
+    & .slick-arrow > svg {
+      fill: #333;
+    }
   }
 
   &.theme-darker {
@@ -104,6 +122,10 @@
     & > .zoombox-close-btn {
       color: #dbdbdb;
     }
+
+    & .slick-arrow > svg {
+      fill: #dbdbdb;
+    }
   }
 
   &.theme-darkest {
@@ -111,6 +133,10 @@
 
     & > .zoombox-close-btn {
       color: #e5e5e5;
+    }
+
+    & .slick-arrow > svg {
+      fill: #e5e5e5;
     }
   }
 }
