@@ -5,16 +5,6 @@
   width: 100vw;
   height: 100vh;
   z-index: 9999;
-  padding: 15px;
-
-  @media (min-width: 768px) {
-    padding: 25px 50px;
-  }
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  vertical-align: middle;
 
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
@@ -40,10 +30,47 @@
   }
 
   & > .zoombox-inner {
+    overflow: hidden;
+    margin: 15px;
+    height: calc(100% - 30px);
+
+    @media (min-width: 768px) {
+      margin: 25px 50px;
+      height: calc(100% - 50px);
+    }
 
     & > img.zoombox-image {
       max-width: 100%;
       height: auto;
+    }
+
+    .slick-slide {
+      float: left;
+      margin: 0 5px;
+    }
+
+    .slick-arrow {
+      position: absolute;
+      top: calc(50% - 25px);
+      height: 50px;
+      width: 50px;
+      z-index: 1;
+      background: none;
+      border: none;
+      outline: none;
+
+      &.slick-prev {
+        left: 0;
+      }
+
+      &.slick-next {
+        right: 0;
+      }
+
+      & > svg {
+        max-height: 100%;
+        width: auto;
+      }
     }
   }
 
