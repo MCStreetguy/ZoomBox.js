@@ -1,7 +1,10 @@
 {
   "name": "zoombox.js",
   "description": "",
-  "main": "dist/zoombox.jquery.min.js",
+  "main": [
+    "src/jquery.js",
+    "src/plain.js"
+  ],
   "authors": [
     "Maximilian Schmidt"
   ],
@@ -12,5 +15,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "slick-carousel": "^1.8.1"
+  }
 }

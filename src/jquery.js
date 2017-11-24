@@ -79,7 +79,7 @@
           over.addClass('in').one('transitionend',function () {});
         },50);
       })
-    })
+    }) 
 
     if(options.listenKeys) {
       $(document).on('keyup',function (event) {
@@ -96,10 +96,10 @@
     return this;
   };
 
-  if(!window.preventAutoZoom) {
-    $(function () {
+  $(function () {
+    if(!window.preventAutoZoom) {
       $('.'+defaultValues._targetClass).zoombox();
-    })
-  }
+    }
+  })
 
 }( jQuery ));
