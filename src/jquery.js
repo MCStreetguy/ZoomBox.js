@@ -1,9 +1,9 @@
 (function ( $ ) {
 
   if(typeof $ === 'undefined') {
-		if('console' in window) window.console.warn('ZoomBox.js needs jQuery! Aborted loading.');
-		return;
-	}
+    if('console' in window) window.console.warn('ZoomBox.js needs jQuery! Aborted loading.');
+    return;
+  }
 
   var defaultValues = {
     _targetClass: 'zoombox',
@@ -24,13 +24,7 @@
 
     $(document.body).css('overflow','hidden');
 
-    var tpl = '<div id="' + options.containerId + '">';
-    tpl += '<div class="' + options.buttonClass + '">&times;</div>';
-    tpl += '<div class="' + options.innerClass + '">';
-    tpl += '</div>';
-    tpl += '</div>';
-
-    var elem = $(document.body).append(tpl).find('#'+options.containerId);
+    var elem = $(document.body).append('<div id="' + options.containerId + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId);
 
     if(options.closeOnBackClick) {
       elem.on('click',function (event) {
@@ -78,34 +72,43 @@
     }
 
     this.each(function (index,element,array) {
-      var src = [(options.useDataSource ? $(element).data('src') : $(element).attr('src'))];
-      $($(element).data('parent')).children().not(element).each(function (i,e,a) {
-        src.push((options.useDataSource ? $(e).data('src') : $(e).attr('src')));
-      })
-
       $(element).on('click',function (event) {
+        var src = [];
+        var elements = $($(element).data('parent')).children().get().filter(function (entry) {
+          return $(entry).data('parent')
+        });
+
+        for (var i = 0; i < elements.length; i++) {
+          if(options.useDataSource) {
+            src.push($(elements[i]).data('src'));
+          } else {
+            src.push($(elements[i]).attr('src'));
+          }
+        }
+
         var over = createOverlay(options);
 
-        src.forEach(function (e,i,a) {
-          over.find('.'+options.innerClass).append('<img src="' + e + '" class="' + options.imageClass + '" />');
-        })
+        for (var j = 0; j < src.length; j++) {
+          over.find('.'+options.innerClass).append('<img src="' + src[j] + '" class="' + options.imageClass + '" />');
+        }
 
         if(src.length > 1) {
           $('#'+options.containerId).find('.'+options.innerClass).slick({
             prevArrow: options.sliderPrevButtonContent,
             nextArrow: options.sliderNextButtonContent
-          });
-
-          centerVertical(over.find('.'+options.innerClass),'.slick-slide');
-        } else {
-          centerVertical(over.find('.'+options.innerClass),over.find('.'+options.imageClass));
+          }).slick('slickGoTo',elements.indexOf(element),true);
         }
 
-        setTimeout(function () {
-          over.addClass('in').one('transitionend',function () {});
-        },1);
+        centerVertical(over.find('.'+options.innerClass),over.find('.'+(src.length > 1 ? 'slick-slide' : options.imageClass)));
+        over.addClass('in').one('transitionend',function () {});
       })
     })
+
+    var _this = this;
+
+    for (var i = 0; i < _this.length; i++) {
+
+    }
 
     if(options.listenKeys) {
       $(document).on('keyup',function (event) {
