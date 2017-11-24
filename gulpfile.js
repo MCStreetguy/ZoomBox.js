@@ -3,6 +3,9 @@ const rename = require('gulp-rename');
 const uglify = require('gulp-uglify');
 const plumber = require('gulp-plumber');
 const pump = require('pump');
+const sass = require('gulp-sass');
+const cleanCSS = require('gulp-clean-css');
+const autoprefixer = require('gulp-autoprefixer');
 
 function buildJQuery() {
   pump([
@@ -36,7 +39,29 @@ function buildPlain() {
 }
 gulp.task('build-plain',buildPlain);
 
-gulp.task('default', ['build-jQuery','build-plain'], function() {
+function buildCss() {
+  pump([
+    plumber({
+      errorHandler: function(err) {
+        console.log(err);
+        this.emit('end');
+      }
+    }),
+    gulp.src('src/styles.scss'),
+    sass(),
+    cleanCSS(),
+    autoprefixer({
+        browsers: ['last 5 versions'],
+        cascade: false
+    }),
+    rename('zoombox.min.css'),
+    gulp.dest('dist/')
+  ])
+}
+gulp.task('build-css',buildCss);
+
+gulp.task('default', ['build-jQuery','build-plain','build-css'], function() {
   gulp.watch('src/jquery.js',['build-jQuery']);
   gulp.watch('src/plain.js',['build-plain']);
+  gulp.watch('src/styles.scss',['build-css']);
 });

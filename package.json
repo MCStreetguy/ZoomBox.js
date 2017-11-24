@@ -2,7 +2,7 @@
   "name": "zoombox.js",
   "version": "0.0.0",
   "description": "",
-  "main": "dist/zoombox.min.js",
+  "main": "dist/zoombox.jquery.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MCStreetguy/ZoomBox.js.git"
@@ -15,8 +15,11 @@
   "homepage": "https://github.com/MCStreetguy/ZoomBox.js#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-clean-css": "^3.9.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
     "gulp-uglify": "^3.0.0",
     "pump": "^1.0.3"
   },

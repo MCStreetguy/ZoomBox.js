@@ -1,0 +1,16 @@
+{
+  "name": "zoombox.js",
+  "description": "",
+  "main": "dist/zoombox.jquery.min.js",
+  "authors": [
+    "Maximilian Schmidt"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/MCStreetguy/ZoomBox.js",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
