@@ -1,7 +1,7 @@
 {
   "name": "zoombox.js",
   "version": "1.0.0",
-  "description": "",
+  "description": "An easy but working jQuery lightbox plugin.",
   "main": "dist/zoombox.jquery.min.js",
   "repository": {
     "type": "git",
