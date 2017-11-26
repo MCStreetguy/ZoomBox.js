@@ -1,17 +1,12 @@
 #zoombox-overlay {
+  display: none;
+  
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 9999;
-
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-
-  &.in {
-    opacity: 1;
-  }
 
   & > .zoombox-close-btn {
     position: absolute;
@@ -73,70 +68,6 @@
         max-height: 100%;
         width: auto;
       }
-    }
-  }
-
-  &.theme-lightest {
-    background-color: rgba(255,255,255,0.7);
-
-    & > .zoombox-close-btn {
-      color: #333333;
-    }
-
-    & .slick-arrow > svg {
-      fill: #333333;
-    }
-  }
-
-  &.theme-lighter {
-    background-color: rgba(255,255,255,0.5);
-
-    & > .zoombox-close-btn {
-      color: #3a3a3a;
-    }
-
-    & .slick-arrow > svg {
-      fill: #3a3a3a;
-    }
-  }
-
-  &.theme-light {
-    background-color: rgba(255,255,255,0.3);
-
-    & .slick-arrow > svg {
-      fill: #333;
-    }
-  }
-
-  &.theme-dark {
-    background-color: rgba(0,0,0,0.3);
-
-    & .slick-arrow > svg {
-      fill: #333;
-    }
-  }
-
-  &.theme-darker {
-    background-color: rgba(0,0,0,0.5);
-
-    & > .zoombox-close-btn {
-      color: #dbdbdb;
-    }
-
-    & .slick-arrow > svg {
-      fill: #dbdbdb;
-    }
-  }
-
-  &.theme-darkest {
-    background-color: rgba(0,0,0,0.7);
-
-    & > .zoombox-close-btn {
-      color: #e5e5e5;
-    }
-
-    & .slick-arrow > svg {
-      fill: #e5e5e5;
     }
   }
 }
