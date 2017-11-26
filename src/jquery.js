@@ -34,16 +34,20 @@
     if(options.closeOnBlurClick) {
       overlay.on('click',function (event) {
         if(!$(event.target).is('.slick-slide, .slick-slide *, .slick-arrow, .slick-arrow *')) {
+          overlay.trigger('zoomboxOverlayHiding');
           overlay.fadeOut(function () {
             inner.slick('slickUnfilter',0);
+            overlay.trigger('zoomboxOverlayHidden');
           });
         }
       })
     } else {
       overlay.on('click',function (event) {
         if($(event.target).is('.'+options.buttonClass)) {
+          overlay.trigger('zoomboxOverlayHiding');
           overlay.fadeOut(function () {
             inner.slick('slickUnfilter',0);
+            overlay.trigger('zoomboxOverlayHidden');
           });
         }
       })
@@ -66,6 +70,8 @@
       inner.append(tmp);
 
       $(this[i]).attr('data-index',i).on('click',function (event) {
+        overlay.trigger('zoomboxOverlayShowing');
+
         overlay.fadeIn();
         inner.slick('slickGoTo',$(this).data('index'),true);
         var rel = $(this).attr('rel');
@@ -75,24 +81,32 @@
         inner.find('.slick-slide').each(function (i,e,a) {
           $(this).css('margin-top',(inner.height() - $(this).height()) / 2);
         })
+
+        overlay.trigger('zoomboxOverlayShown');
       })
     }
 
     inner.slick({
       prevArrow: options.sliderPrevButton,
       nextArrow: options.sliderNextButton
+    }).on('afterChange',function (e) {
+      overlay.trigger('zoomboxChanged');
     })
 
     if(options.listenKeys) {
       $(document).on('keyup',function (event) {
         if(event.key === 'Escape') {
+          overlay.trigger('zoomboxOverlayHiding');
           overlay.fadeOut(function () {
             inner.slick('slickUnfilter',0);
+            overlay.trigger('zoomboxOverlayHidden');
           });
         } else if(event.key === 'ArrowRight') {
           inner.slick('slickNext');
+          overlay.trigger('zoomboxChanged');
         } else if(event.key === 'ArrowLeft') {
           inner.slick('slickPrev');
+          overlay.trigger('zoomboxChanged');
         }
       })
     }
