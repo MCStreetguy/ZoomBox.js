@@ -8,13 +8,15 @@ via Bower:
 _Please make sure to also include Slick Carousel to ensure functionality!_
 
 via jsDelivr CDN:   
-`https://cdn.jsdelivr.net/npm/zoombox.js@1/dist/zoombox.jquery.min.js`   
+> https://cdn.jsdelivr.net/npm/zoombox.js@1/dist/zoombox.jquery.min.js
+
 ```HTML
 <script src="https://cdn.jsdelivr.net/npm/zoombox.js@1/dist/zoombox.jquery.min.js" charset="utf-8"></script>
 ```
 
 via GitHub Raw:   
-`https://raw.githubusercontent.com/MCStreetguy/ZoomBox.js/master/dist/zoombox.jquery.min.js`
+> https://raw.githubusercontent.com/MCStreetguy/ZoomBox.js/master/dist/zoombox.jquery.min.js
+
 ```HTML
 <script src="https://raw.githubusercontent.com/MCStreetguy/ZoomBox.js/master/dist/zoombox.jquery.min.js" charset="utf-8"></script>
 ```
