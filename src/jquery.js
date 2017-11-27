@@ -28,6 +28,10 @@
     if(options !== undefined && typeof options === 'object') {
       for(var setting in defaultValues) {
         if(defaultValues.hasOwnProperty(setting) && (options[setting] === undefined || typeof defaultValues[setting] !== typeof options[setting])) {
+          if(options[setting] !== undefined && typeof defaultValues[setting] !== typeof options[setting]) {
+            console.warn('[ZoomBox.js] Replaced invalid option '+setting+' with default value!');
+          }
+
           options[setting] = defaultValues[setting];
         }
       }
