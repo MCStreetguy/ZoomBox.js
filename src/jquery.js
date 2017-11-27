@@ -5,6 +5,11 @@
     return;
   }
 
+  if(typeof $.fn.slick === 'undefined') {
+    if('console' in window) window.console.warn('ZoomBox.js needs Slick Carousel jQuery Plugin! Aborted loading.');
+    return;
+  }
+
   var defaultValues = {
     containerId: 'zoombox-overlay',
     buttonClass: 'zoombox-close-btn',
