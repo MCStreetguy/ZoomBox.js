@@ -17,7 +17,6 @@ function buildJQuery() {
       }
     }),
     gulp.src([
-      'bower_components/slick-carousel/slick/slick.js',
       'src/jquery.js'
     ]),
     concat('main.js'),
@@ -53,7 +52,6 @@ function buildCss() {
       }
     }),
     gulp.src([
-      'bower_components/slick-carousel/slick/slick.sass',
       'src/styles.scss'
     ]),
     concat('main.scss'),
@@ -69,7 +67,9 @@ function buildCss() {
 }
 gulp.task('build-css',buildCss);
 
-gulp.task('default', ['build-jQuery','build-plain','build-css'], function() {
+gulp.task('build', ['build-jQuery','build-plain','build-css'])
+
+gulp.task('default', ['build'], function() {
   gulp.watch('src/jquery.js',['build-jQuery']);
   gulp.watch('src/plain.js',['build-plain']);
   gulp.watch('src/styles.scss',['build-css']);
