@@ -7,13 +7,13 @@ Visit the [Documentation](http://docs.mcstreetguy.de/ZoomBox.js/) for more infor
 ## Include it
 
 ```HTML
-<script src="https://cdn.jsdelivr.net/npm/zoombox.js@1/dist/zoombox.jquery.min.js" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/zoombox.js@1" charset="utf-8"></script>
 ```
 
 ## Use it
 
 ```JavaScript
-$('.my-img-class').zoombox({
-  option: value
+$(function () {
+  $('.my-img-class').zoombox();
 })
 ```
