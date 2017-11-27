@@ -83,11 +83,15 @@
       $(this[i]).attr('data-index',i).on('click',function (event) {
         overlay.trigger('zoomboxOverlayShowing');
 
+        overlay.fadeIn(function () {
+          overlay.trigger('zoomboxOverlayShown');
+        });
+
         inner.slick('slickGoTo',$(this).data('index'),true);
+
         var rel = $(this).attr('rel');
         inner.slick('slickFilter',function () {
-          var e = ($(this).is('img') ? $(this) : $(this).find('img'));
-          return (e.attr('rel') === rel);
+          return ($(this).attr('rel') === rel);
         })
 
         if(options.centerImages) {
@@ -95,10 +99,6 @@
             $(this).css('margin-top',(inner.height() - $(this).height()) / 2);
           })
         }
-
-        overlay.fadeIn(function () {
-          overlay.trigger('zoomboxOverlayShown');
-        });
       })
     }
 
