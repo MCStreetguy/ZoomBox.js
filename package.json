@@ -1,12 +1,9 @@
 {
   "name": "zoombox.js",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "An easy but working jQuery lightbox plugin.",
   "main": "dist/zoombox.jquery.min.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MCStreetguy/ZoomBox.js.git"
-  },
+  "repository": "git+https://github.com/MCStreetguy/ZoomBox.js.git",
   "author": "Maximilian Schmidt",
   "license": "MIT",
   "bugs": {
@@ -28,5 +25,6 @@
   "peerDependencies": {
     "jquery": "3.x",
     "slick-carousel": "1.8.x"
-  }
+  },
+  "private": false
 }
