@@ -82,7 +82,8 @@
         inner.slick('slickGoTo',$(this).data('index'),true);
         var rel = $(this).attr('rel');
         inner.slick('slickFilter',function () {
-          return ($(this).find('img').attr('rel') === rel);
+          var e = ($(this).is('img') ? $(this) : $(this).find('img'));
+          return (e.attr('rel') === rel);
         })
 
         if(options.centerImages) {
