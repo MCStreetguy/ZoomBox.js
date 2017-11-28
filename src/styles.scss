@@ -34,13 +34,14 @@
       height: calc(100% - 50px);
     }
 
-    & > img.zoombox-image {
+    & > .zoombox-image {
       max-width: 100%;
       height: auto;
     }
 
     .slick-slide {
       float: left;
+      outline: none !important;
 
       .zoombox-image {
         display: block;

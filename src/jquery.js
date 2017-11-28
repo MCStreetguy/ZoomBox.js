@@ -47,14 +47,12 @@
 
     switch (method) {
       case 'temporary':
-        options.containerId = options.containerId+'-temp';
-
-        var overlay = $(document.body).append('<div id="' + options.containerId + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId);
+        var overlay = $(document.body).append('<div id="' + options.containerId+'-temp' + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId+'-temp');
         var inner = overlay.find('.'+options.innerClass);
 
         if(options.closeOnBlurClick) {
           overlay.on('click',function (event) {
-            if(!$(event.target).is('.slick-slide, .slick-slide *, .slick-arrow, .slick-arrow *')) {
+            if(!$(event.target).is('.slick-slide *, .slick-arrow, .slick-arrow *')) {
               overlay.trigger('zoomboxOverlayHiding');
               overlay.fadeOut(options.fadeDuration,function () {
                 inner.slick('unslick');
@@ -140,6 +138,8 @@
           }
         },50);
 
+        $(window).trigger('resize');
+
         break;
       default:
         var overlay = $(document.body).append('<div id="' + options.containerId + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId);
@@ -216,6 +216,8 @@
                 })
               }
             },50);
+
+            $(window).trigger('resize');
           })
         }
 
@@ -250,7 +252,7 @@
     if(options.enforceChaining) {
       return this;
     } else {
-      return $('#'+options.containerId);
+      return $('#'+options.containerId) || $('#'+options.containerId+'-temp');
     }
   };
 
