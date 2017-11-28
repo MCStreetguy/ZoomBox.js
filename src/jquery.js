@@ -87,18 +87,21 @@
           overlay.trigger('zoomboxOverlayShown');
         });
 
-        inner.slick('slickGoTo',$(this).data('index'),true);
-
         var rel = $(this).attr('rel');
-        inner.slick('slickFilter',function () {
-          return ($(this).attr('rel') === rel);
-        })
 
-        if(options.centerImages) {
-          inner.find('.slick-slide').each(function (i,e,a) {
-            $(this).css('margin-top',(inner.height() - $(this).height()) / 2);
+        setTimeout(function () {
+          inner.slick('slickGoTo',$(this).data('index'),true);
+
+          inner.slick('slickFilter',function () {
+            return ($(this).attr('rel') === rel);
           })
-        }
+
+          if(options.centerImages) {
+            inner.find('.slick-slide').each(function (i,e,a) {
+              $(this).css('margin-top',(inner.height() - $(this).height()) / 2);
+            })
+          }
+        },50);
       })
     }
 
