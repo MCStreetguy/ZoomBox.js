@@ -18,11 +18,11 @@
     wrapperClass: 'zoombox-image-wrapper',
     listenKeys: true,
     closeOnBlurClick: true,
-    useDataSource: false,
     centerImages: true,
     sliderPrevButton: '<button type="button" class="slick-prev"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 8 14"><path d="M4.898 10.75q0 0.102-0.078 0.18l-0.391 0.391q-0.078 0.078-0.18 0.078t-0.18-0.078l-3.641-3.641q-0.078-0.078-0.078-0.18t0.078-0.18l3.641-3.641q0.078-0.078 0.18-0.078t0.18 0.078l0.391 0.391q0.078 0.078 0.078 0.18t-0.078 0.18l-3.070 3.070 3.070 3.070q0.078 0.078 0.078 0.18zM7.898 10.75q0 0.102-0.078 0.18l-0.391 0.391q-0.078 0.078-0.18 0.078t-0.18-0.078l-3.641-3.641q-0.078-0.078-0.078-0.18t0.078-0.18l3.641-3.641q0.078-0.078 0.18-0.078t0.18 0.078l0.391 0.391q0.078 0.078 0.078 0.18t-0.078 0.18l-3.070 3.070 3.070 3.070q0.078 0.078 0.078 0.18z"></path></svg></button>',
     sliderNextButton: '<button type="button" class="slick-next"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 8 14"><path d="M4.648 7.5q0 0.102-0.078 0.18l-3.641 3.641q-0.078 0.078-0.18 0.078t-0.18-0.078l-0.391-0.391q-0.078-0.078-0.078-0.18t0.078-0.18l3.070-3.070-3.070-3.070q-0.078-0.078-0.078-0.18t0.078-0.18l0.391-0.391q0.078-0.078 0.18-0.078t0.18 0.078l3.641 3.641q0.078 0.078 0.078 0.18zM7.648 7.5q0 0.102-0.078 0.18l-3.641 3.641q-0.078 0.078-0.18 0.078t-0.18-0.078l-0.391-0.391q-0.078-0.078-0.078-0.18t0.078-0.18l3.070-3.070-3.070-3.070q-0.078-0.078-0.078-0.18t0.078-0.18l0.391-0.391q0.078-0.078 0.18-0.078t0.18 0.078l3.641 3.641q0.078 0.078 0.078 0.18z"></path></svg></button>',
-    enforceChaining: false
+    enforceChaining: false,
+    fadeDuration: 500
   }
 
   $.fn.zoombox = function(options) {
@@ -47,7 +47,7 @@
       overlay.on('click',function (event) {
         if(!$(event.target).is('.slick-slide, .slick-slide *, .slick-arrow, .slick-arrow *')) {
           overlay.trigger('zoomboxOverlayHiding');
-          overlay.fadeOut(function () {
+          overlay.fadeOut(options.fadeDuration,function () {
             inner.slick('slickUnfilter',0);
             overlay.trigger('zoomboxOverlayHidden');
           });
@@ -57,7 +57,7 @@
       overlay.on('click',function (event) {
         if($(event.target).is('.'+options.buttonClass)) {
           overlay.trigger('zoomboxOverlayHiding');
-          overlay.fadeOut(function () {
+          overlay.fadeOut(options.fadeDuration,function () {
             inner.slick('slickUnfilter',0);
             overlay.trigger('zoomboxOverlayHidden');
           });
@@ -66,11 +66,18 @@
     }
 
     for (var i = 0; i < this.length; i++) {
-      if(options.useDataSource) {
-        var src = $(this[i]).data('src');
+      if(options.forceSourceAttr) {
+        var src = $(this[i]).attr(options.forceSourceAttr);
       } else {
-        var src = $(this[i]).attr('src');
+        if($(this[i]).is('a')) {
+          var src = $(this[i]).attr('href');
+        } else if($(this[i]).is('img')) {
+          var src = $(this[i]).attr('src');
+        } else {
+          var src = $(this[i]).data('src');
+        }
       }
+
       var rel = $(this[i]).attr('rel');
 
       var tmp = '<div class="' + options.wrapperClass + '"><img src="' + src + '" class="' + options.imageClass + '" ';
@@ -82,21 +89,25 @@
       inner.append(tmp);
 
       $(this[i]).attr('data-index',i).on('click',function (event) {
+        if($(this).is('a')) {
+          event.preventDefault();
+        }
+
         overlay.trigger('zoomboxOverlayShowing');
 
-        overlay.fadeIn(function () {
+        overlay.fadeIn(options.fadeDuration,function () {
           overlay.trigger('zoomboxOverlayShown');
         });
 
         var rel = $(this).attr('rel');
 
+        inner.slick('slickGoTo',$(this).data('index'),true);
+
+        inner.slick('slickFilter',function () {
+          return ($(this).find('img').attr('rel') === rel);
+        })
+
         setTimeout(function () {
-          inner.slick('slickGoTo',$(this).data('index'),true);
-
-          inner.slick('slickFilter',function () {
-            return ($(this).find('img').attr('rel') === rel);
-          })
-
           if(options.centerImages) {
             inner.find('.slick-slide').each(function (i,e,a) {
               $(this).css('margin-top',(inner.outerHeight() - $(this).outerHeight()) / 2);
@@ -117,7 +128,7 @@
       $(document).on('keyup',function (event) {
         if(event.key === 'Escape') {
           overlay.trigger('zoomboxOverlayHiding');
-          overlay.fadeOut(function () {
+          overlay.fadeOut(options.fadeDuration,function () {
             inner.slick('slickUnfilter',0);
             overlay.trigger('zoomboxOverlayHidden');
           });
