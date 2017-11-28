@@ -25,7 +25,12 @@
     fadeDuration: 500
   }
 
-  $.fn.zoombox = function(options) {
+  $.fn.zoombox = function(method,options) {
+    if(typeof method === 'object') {
+      options = method;
+      method = 'default';
+    }
+
     if(options !== undefined && typeof options === 'object') {
       for(var setting in defaultValues) {
         if(defaultValues.hasOwnProperty(setting) && (options[setting] === undefined || typeof defaultValues[setting] !== typeof options[setting])) {
@@ -40,57 +45,85 @@
       options = defaultValues;
     }
 
-    var overlay = $(document.body).append('<div id="' + options.containerId + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId);
-    var inner = overlay.find('.'+options.innerClass);
+    switch (method) {
+      case 'temporary':
+        options.containerId = options.containerId+'-temp';
 
-    if(options.closeOnBlurClick) {
-      overlay.on('click',function (event) {
-        if(!$(event.target).is('.slick-slide, .slick-slide *, .slick-arrow, .slick-arrow *')) {
-          overlay.trigger('zoomboxOverlayHiding');
-          overlay.fadeOut(options.fadeDuration,function () {
-            inner.slick('slickUnfilter',0);
-            overlay.trigger('zoomboxOverlayHidden');
-          });
-        }
-      })
-    } else {
-      overlay.on('click',function (event) {
-        if($(event.target).is('.'+options.buttonClass)) {
-          overlay.trigger('zoomboxOverlayHiding');
-          overlay.fadeOut(options.fadeDuration,function () {
-            inner.slick('slickUnfilter',0);
-            overlay.trigger('zoomboxOverlayHidden');
-          });
-        }
-      })
-    }
+        var overlay = $(document.body).append('<div id="' + options.containerId + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId);
+        var inner = overlay.find('.'+options.innerClass);
 
-    for (var i = 0; i < this.length; i++) {
-      if(options.forceSourceAttr) {
-        var src = $(this[i]).attr(options.forceSourceAttr);
-      } else {
-        if($(this[i]).is('a')) {
-          var src = $(this[i]).attr('href');
-        } else if($(this[i]).is('img')) {
-          var src = $(this[i]).attr('src');
+        if(options.closeOnBlurClick) {
+          overlay.on('click',function (event) {
+            if(!$(event.target).is('.slick-slide, .slick-slide *, .slick-arrow, .slick-arrow *')) {
+              overlay.trigger('zoomboxOverlayHiding');
+              overlay.fadeOut(options.fadeDuration,function () {
+                inner.slick('unslick');
+                overlay.trigger('zoomboxOverlayHidden');
+                overlay.remove();
+              });
+            }
+          })
         } else {
-          var src = $(this[i]).data('src');
+          overlay.on('click',function (event) {
+            if($(event.target).is('.'+options.buttonClass)) {
+              overlay.trigger('zoomboxOverlayHiding');
+              overlay.fadeOut(options.fadeDuration,function () {
+                inner.slick('unslick');
+                overlay.trigger('zoomboxOverlayHidden');
+                overlay.remove();
+              });
+            }
+          })
         }
-      }
 
-      var rel = $(this[i]).attr('rel');
+        for (var i = 0; i < this.length; i++) {
+          if(options.forceSourceAttr) {
+            var src = $(this[i]).attr(options.forceSourceAttr);
+          } else {
+            if($(this[i]).is('a')) {
+              var src = $(this[i]).attr('href');
+            } else if($(this[i]).is('img')) {
+              var src = $(this[i]).attr('src');
+            } else {
+              var src = $(this[i]).data('src');
+            }
+          }
 
-      var tmp = '<div class="' + options.wrapperClass + '"><img src="' + src + '" class="' + options.imageClass + '" ';
-      if(rel !== undefined && rel !== false && rel !== '') {
-        tmp += 'rel="' + rel + '"';
-      }
-      tmp += '/></div>';
+          var rel = $(this[i]).attr('rel');
 
-      inner.append(tmp);
+          var tmp = '<div class="' + options.wrapperClass + '"><img src="' + src + '" class="' + options.imageClass + '" ';
+          if(rel !== undefined && rel !== false && rel !== '') {
+            tmp += 'rel="' + rel + '"';
+          }
+          tmp += '/></div>';
 
-      $(this[i]).attr('data-index',i).on('click',function (event) {
-        if($(this).is('a')) {
-          event.preventDefault();
+          inner.append(tmp);
+        }
+
+        inner.slick({
+          prevArrow: options.sliderPrevButton,
+          nextArrow: options.sliderNextButton
+        }).on('afterChange',function (e) {
+          overlay.trigger('zoomboxChanged');
+        })
+
+        if(options.listenKeys) {
+          $(document).on('keyup',function (event) {
+            if(event.key === 'Escape') {
+              overlay.trigger('zoomboxOverlayHiding');
+              overlay.fadeOut(options.fadeDuration,function () {
+                inner.slick('unslick');
+                overlay.trigger('zoomboxOverlayHidden');
+                overlay.remove();
+              });
+            } else if(event.key === 'ArrowRight') {
+              inner.slick('slickNext');
+              overlay.trigger('zoomboxChanged');
+            } else if(event.key === 'ArrowLeft') {
+              inner.slick('slickPrev');
+              overlay.trigger('zoomboxChanged');
+            }
+          })
         }
 
         overlay.trigger('zoomboxOverlayShowing');
@@ -99,14 +132,6 @@
           overlay.trigger('zoomboxOverlayShown');
         });
 
-        var rel = $(this).attr('rel');
-
-        inner.slick('slickGoTo',$(this).data('index'),true);
-
-        inner.slick('slickFilter',function () {
-          return ($(this).find('img').attr('rel') === rel);
-        })
-
         setTimeout(function () {
           if(options.centerImages) {
             inner.find('.slick-slide').each(function (i,e,a) {
@@ -114,32 +139,112 @@
             })
           }
         },50);
-      })
-    }
 
-    inner.slick({
-      prevArrow: options.sliderPrevButton,
-      nextArrow: options.sliderNextButton
-    }).on('afterChange',function (e) {
-      overlay.trigger('zoomboxChanged');
-    })
+        break;
+      default:
+        var overlay = $(document.body).append('<div id="' + options.containerId + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId);
+        var inner = overlay.find('.'+options.innerClass);
 
-    if(options.listenKeys) {
-      $(document).on('keyup',function (event) {
-        if(event.key === 'Escape') {
-          overlay.trigger('zoomboxOverlayHiding');
-          overlay.fadeOut(options.fadeDuration,function () {
-            inner.slick('slickUnfilter',0);
-            overlay.trigger('zoomboxOverlayHidden');
-          });
-        } else if(event.key === 'ArrowRight') {
-          inner.slick('slickNext');
-          overlay.trigger('zoomboxChanged');
-        } else if(event.key === 'ArrowLeft') {
-          inner.slick('slickPrev');
-          overlay.trigger('zoomboxChanged');
+        if(options.closeOnBlurClick) {
+          overlay.on('click',function (event) {
+            if(!$(event.target).is('.slick-slide, .slick-slide *, .slick-arrow, .slick-arrow *')) {
+              overlay.trigger('zoomboxOverlayHiding');
+              overlay.fadeOut(options.fadeDuration,function () {
+                inner.slick('slickUnfilter',0);
+                overlay.trigger('zoomboxOverlayHidden');
+              });
+            }
+          })
+        } else {
+          overlay.on('click',function (event) {
+            if($(event.target).is('.'+options.buttonClass)) {
+              overlay.trigger('zoomboxOverlayHiding');
+              overlay.fadeOut(options.fadeDuration,function () {
+                inner.slick('slickUnfilter',0);
+                overlay.trigger('zoomboxOverlayHidden');
+              });
+            }
+          })
         }
-      })
+
+        for (var i = 0; i < this.length; i++) {
+          if(options.forceSourceAttr) {
+            var src = $(this[i]).attr(options.forceSourceAttr);
+          } else {
+            if($(this[i]).is('a')) {
+              var src = $(this[i]).attr('href');
+            } else if($(this[i]).is('img')) {
+              var src = $(this[i]).attr('src');
+            } else {
+              var src = $(this[i]).data('src');
+            }
+          }
+
+          var rel = $(this[i]).attr('rel');
+
+          var tmp = '<div class="' + options.wrapperClass + '"><img src="' + src + '" class="' + options.imageClass + '" ';
+          if(rel !== undefined && rel !== false && rel !== '') {
+            tmp += 'rel="' + rel + '"';
+          }
+          tmp += '/></div>';
+
+          inner.append(tmp);
+
+          $(this[i]).attr('data-index',i).on('click',function (event) {
+            if($(this).is('a')) {
+              event.preventDefault();
+            }
+
+            overlay.trigger('zoomboxOverlayShowing');
+
+            overlay.fadeIn(options.fadeDuration,function () {
+              overlay.trigger('zoomboxOverlayShown');
+            });
+
+            var rel = $(this).attr('rel');
+
+            inner.slick('slickGoTo',$(this).data('index'),true);
+
+            inner.slick('slickFilter',function () {
+              return ($(this).find('img').attr('rel') === rel);
+            })
+
+            setTimeout(function () {
+              if(options.centerImages) {
+                inner.find('.slick-slide').each(function (i,e,a) {
+                  $(this).css('margin-top',(inner.outerHeight() - $(this).outerHeight()) / 2);
+                })
+              }
+            },50);
+          })
+        }
+
+        inner.slick({
+          prevArrow: options.sliderPrevButton,
+          nextArrow: options.sliderNextButton
+        }).on('afterChange',function (e) {
+          overlay.trigger('zoomboxChanged');
+        })
+
+        if(options.listenKeys) {
+          $(document).on('keyup',function (event) {
+            if(event.key === 'Escape') {
+              overlay.trigger('zoomboxOverlayHiding');
+              overlay.fadeOut(options.fadeDuration,function () {
+                inner.slick('slickUnfilter',0);
+                overlay.trigger('zoomboxOverlayHidden');
+              });
+            } else if(event.key === 'ArrowRight') {
+              inner.slick('slickNext');
+              overlay.trigger('zoomboxChanged');
+            } else if(event.key === 'ArrowLeft') {
+              inner.slick('slickPrev');
+              overlay.trigger('zoomboxChanged');
+            }
+          })
+        }
+
+        break;
     }
 
     if(options.enforceChaining) {
