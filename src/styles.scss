@@ -1,6 +1,6 @@
 #zoombox-overlay {
   display: none;
-  
+
   position: fixed;
   top: 0;
   left: 0;
@@ -42,6 +42,12 @@
     .slick-slide {
       float: left;
       margin: 0 5px;
+
+      .zoombox-image {
+        display: block;
+        max-width: calc(100vw - 100px);
+        max-height: calc(100vh - 50px);
+      }
     }
 
     .slick-arrow {

@@ -15,6 +15,7 @@
     buttonClass: 'zoombox-close-btn',
     innerClass: 'zoombox-inner',
     imageClass: 'zoombox-image',
+    wrapperClass: 'zoombox-image-wrapper',
     listenKeys: true,
     closeOnBlurClick: true,
     useDataSource: false,
@@ -72,11 +73,11 @@
       }
       var rel = $(this[i]).attr('rel');
 
-      var tmp = '<img src="' + src + '" class="' + options.imageClass + '" ';
+      var tmp = '<div class="' + options.wrapperClass + '"><img src="' + src + '" class="' + options.imageClass + '" ';
       if(rel !== undefined && rel !== false && rel !== '') {
         tmp += 'rel="' + rel + '"';
       }
-      tmp += '/>';
+      tmp += '/></div>';
 
       inner.append(tmp);
 
@@ -93,12 +94,12 @@
           inner.slick('slickGoTo',$(this).data('index'),true);
 
           inner.slick('slickFilter',function () {
-            return ($(this).attr('rel') === rel);
+            return ($(this).find('img').attr('rel') === rel);
           })
 
           if(options.centerImages) {
-            inner.find('.slick-slide').each(function (i,e,a) {
-              $(this).css('margin-top',(inner.height() - $(this).height()) / 2);
+            inner.find('.slick-slide > img').each(function (i,e,a) {
+              $(this).css('margin','0 auto').css('margin-top',(inner.outerHeight() - $(this).outerHeight()) / 2);
             })
           }
         },50);
