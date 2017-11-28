@@ -98,8 +98,8 @@
           })
 
           if(options.centerImages) {
-            inner.find('.slick-slide > img').each(function (i,e,a) {
-              $(this).css('margin','0 auto').css('margin-top',(inner.outerHeight() - $(this).outerHeight()) / 2);
+            inner.find('.slick-slide').each(function (i,e,a) {
+              $(this).css('margin-top',(inner.outerHeight() - $(this).outerHeight()) / 2);
             })
           }
         },50);
