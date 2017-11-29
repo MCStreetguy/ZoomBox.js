@@ -26,12 +26,7 @@
     sliderNextButton: '<button type="button" class="slick-next"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 8 14"><path d="M4.648 7.5q0 0.102-0.078 0.18l-3.641 3.641q-0.078 0.078-0.18 0.078t-0.18-0.078l-0.391-0.391q-0.078-0.078-0.078-0.18t0.078-0.18l3.070-3.070-3.070-3.070q-0.078-0.078-0.078-0.18t0.078-0.18l0.391-0.391q0.078-0.078 0.18-0.078t0.18 0.078l3.641 3.641q0.078 0.078 0.078 0.18zM7.648 7.5q0 0.102-0.078 0.18l-3.641 3.641q-0.078 0.078-0.18 0.078t-0.18-0.078l-0.391-0.391q-0.078-0.078-0.078-0.18t0.078-0.18l3.070-3.070-3.070-3.070q-0.078-0.078-0.078-0.18t0.078-0.18l0.391-0.391q0.078-0.078 0.18-0.078t0.18 0.078l3.641 3.641q0.078 0.078 0.078 0.18z"></path></svg></button>'
   }
 
-  $.fn.zoombox = function(method,options) {
-    if(typeof method === 'object') {
-      options = method;
-      method = 'default';
-    }
-
+  $.fn.zoombox = function(options) {
     if(options !== undefined && typeof options === 'object') {
       for(var setting in defaultValues) {
         if(defaultValues.hasOwnProperty(setting) && (options[setting] === undefined || typeof defaultValues[setting] !== typeof options[setting])) {
@@ -200,13 +195,33 @@
             overlay.trigger('zoomboxOverlayShown');
           });
 
-          var rel = $(this).attr('rel');
-
           inner.slick('slickGoTo',$(this).data('index'),true);
 
-          inner.slick('slickFilter',function () {
-            return ($(this).find('img').attr('rel') === rel);
-          })
+          if($(this).attr('rel') !== undefined) {
+            var rel = $(this).attr('rel');
+
+            inner.slick('slickFilter',function () {
+              return ($(this).find('img').attr('rel') === rel);
+            })
+          } else {
+            var _this = this;
+
+            if(options.forceSourceAttr) {
+              var src = $(_this).attr(options.forceSourceAttr);
+            } else {
+              if($(_this).is('a')) {
+                var src = $(_this).attr('href');
+              } else if($(_this).is('img')) {
+                var src = $(_this).attr('src');
+              } else {
+                var src = $(_this).data('src');
+              }
+            }
+
+            inner.slick('slickFilter',function () {
+              return ($(this).find('img').attr('src') === src);
+            })
+          }
 
           setTimeout(function () {
             if(options.centerImages) {
