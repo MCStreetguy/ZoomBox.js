@@ -11,19 +11,28 @@
   }
 
   var defaultValues = {
-    containerId: 'zoombox-overlay',
+    autoplaySpeed: 5000,
     buttonClass: 'zoombox-close-btn',
-    innerClass: 'zoombox-inner',
-    imageClass: 'zoombox-image',
-    wrapperClass: 'zoombox-image-wrapper',
-    listenKeys: true,
-    closeOnBlurClick: true,
     centerImages: true,
+    closeOnBlurClick: true,
+    containerId: 'zoombox-overlay',
+    disableAutoplayOnHover: false,
+    disableTouchMove: false,
+    enableAutoplay: false,
     enforceChaining: false,
-    fadeDuration: 500,
-    temporary: false,
+    fadeDuration: 300,
+    ignoreInputOnMove: false,
+    imageClass: 'zoombox-image',
+    innerClass: 'zoombox-inner',
+    listenKeys: true,
+    sliderDraggable: true,
+    sliderLooped: true,
+    sliderNextButton: '<button type="button" class="slick-next"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 8 14"><path d="M4.648 7.5q0 0.102-0.078 0.18l-3.641 3.641q-0.078 0.078-0.18 0.078t-0.18-0.078l-0.391-0.391q-0.078-0.078-0.078-0.18t0.078-0.18l3.070-3.070-3.070-3.070q-0.078-0.078-0.078-0.18t0.078-0.18l0.391-0.391q0.078-0.078 0.18-0.078t0.18 0.078l3.641 3.641q0.078 0.078 0.078 0.18zM7.648 7.5q0 0.102-0.078 0.18l-3.641 3.641q-0.078 0.078-0.18 0.078t-0.18-0.078l-0.391-0.391q-0.078-0.078-0.078-0.18t0.078-0.18l3.070-3.070-3.070-3.070q-0.078-0.078-0.078-0.18t0.078-0.18l0.391-0.391q0.078-0.078 0.18-0.078t0.18 0.078l3.641 3.641q0.078 0.078 0.078 0.18z"></path></svg></button>',
     sliderPrevButton: '<button type="button" class="slick-prev"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 8 14"><path d="M4.898 10.75q0 0.102-0.078 0.18l-0.391 0.391q-0.078 0.078-0.18 0.078t-0.18-0.078l-3.641-3.641q-0.078-0.078-0.078-0.18t0.078-0.18l3.641-3.641q0.078-0.078 0.18-0.078t0.18 0.078l0.391 0.391q0.078 0.078 0.078 0.18t-0.078 0.18l-3.070 3.070 3.070 3.070q0.078 0.078 0.078 0.18zM7.898 10.75q0 0.102-0.078 0.18l-0.391 0.391q-0.078 0.078-0.18 0.078t-0.18-0.078l-3.641-3.641q-0.078-0.078-0.078-0.18t0.078-0.18l3.641-3.641q0.078-0.078 0.18-0.078t0.18 0.078l0.391 0.391q0.078 0.078 0.078 0.18t-0.078 0.18l-3.070 3.070 3.070 3.070q0.078 0.078 0.078 0.18z"></path></svg></button>',
-    sliderNextButton: '<button type="button" class="slick-next"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 8 14"><path d="M4.648 7.5q0 0.102-0.078 0.18l-3.641 3.641q-0.078 0.078-0.18 0.078t-0.18-0.078l-0.391-0.391q-0.078-0.078-0.078-0.18t0.078-0.18l3.070-3.070-3.070-3.070q-0.078-0.078-0.078-0.18t0.078-0.18l0.391-0.391q0.078-0.078 0.18-0.078t0.18 0.078l3.641 3.641q0.078 0.078 0.078 0.18zM7.648 7.5q0 0.102-0.078 0.18l-3.641 3.641q-0.078 0.078-0.18 0.078t-0.18-0.078l-0.391-0.391q-0.078-0.078-0.078-0.18t0.078-0.18l3.070-3.070-3.070-3.070q-0.078-0.078-0.078-0.18t0.078-0.18l0.391-0.391q0.078-0.078 0.18-0.078t0.18 0.078l3.641 3.641q0.078 0.078 0.078 0.18z"></path></svg></button>'
+    slideTransition: 'ease',
+    slideTransitionSpeed: 300,
+    temporary: false,
+    wrapperClass: 'zoombox-image-wrapper'
   }
 
   $.fn.zoombox = function(options) {
@@ -157,8 +166,19 @@
     }
 
     inner.slick({
+      appendArrows: (options.navButtonContainer || undefined),
+      autoplay options.enableAutoplay,
+      autoplaySpeed: options.autoplaySpeed,
+      cssEase: options.slideTransition,
+      draggable: options.sliderDraggable,
+      infinite: options.sliderLooped,
+      mobileFirst: false, //TODO: Test this option
+      nextArrow: options.sliderNextButton,
+      pauseOnHover: options.disableAutoplayOnHover,
       prevArrow: options.sliderPrevButton,
-      nextArrow: options.sliderNextButton
+      speed: options.slideTransitionSpeed,
+      touchMove: !options.disableTouchMove,
+      waitForAnimate: options.ignoreInputOnMove
     }).on('afterChange',function (e) {
       overlay.trigger('zoomboxChanged');
     })
@@ -176,12 +196,6 @@
             }
             overlay.trigger('zoomboxOverlayHidden');
           });
-        } else if(event.key === 'ArrowRight' || event.which == 39) {
-          inner.slick('slickNext');
-          overlay.trigger('zoomboxChanged');
-        } else if(event.key === 'ArrowLeft' || event.which == 37) {
-          inner.slick('slickPrev');
-          overlay.trigger('zoomboxChanged');
         }
       }
 
