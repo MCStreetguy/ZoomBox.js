@@ -166,8 +166,7 @@
     }
 
     inner.slick({
-      appendArrows: (options.navButtonContainer || undefined),
-      autoplay options.enableAutoplay,
+      autoplay: options.enableAutoplay,
       autoplaySpeed: options.autoplaySpeed,
       cssEase: options.slideTransition,
       draggable: options.sliderDraggable,
