@@ -43,147 +43,67 @@
 
     if(options.temporary) {
       var overlay = $(document.body).append('<div id="' + options.containerId+'-temp' + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId+'-temp');
-      var inner = overlay.find('.'+options.innerClass);
-
-      if(options.closeOnBlurClick) {
-        overlay.on('click',function (event) {
-          if(!$(event.target).is('.slick-slide *, .slick-arrow, .slick-arrow *')) {
-            overlay.trigger('zoomboxOverlayHiding');
-            overlay.fadeOut(options.fadeDuration,function () {
-              inner.slick('unslick');
-              overlay.trigger('zoomboxOverlayHidden');
-              overlay.remove();
-            });
-          }
-        })
-      } else {
-        overlay.on('click',function (event) {
-          if($(event.target).is('.'+options.buttonClass)) {
-            overlay.trigger('zoomboxOverlayHiding');
-            overlay.fadeOut(options.fadeDuration,function () {
-              inner.slick('unslick');
-              overlay.trigger('zoomboxOverlayHidden');
-              overlay.remove();
-            });
-          }
-        })
-      }
-
-      for (var i = 0; i < this.length; i++) {
-        if(options.forceSourceAttr) {
-          var src = $(this[i]).attr(options.forceSourceAttr);
-        } else {
-          if($(this[i]).is('a')) {
-            var src = $(this[i]).attr('href');
-          } else if($(this[i]).is('img')) {
-            var src = $(this[i]).attr('src');
-          } else {
-            var src = $(this[i]).data('src');
-          }
-        }
-
-        var rel = $(this[i]).attr('rel');
-
-        var tmp = '<div class="' + options.wrapperClass + '"><img src="' + src + '" class="' + options.imageClass + '" ';
-        if(rel !== undefined && rel !== false && rel !== '') {
-          tmp += 'rel="' + rel + '"';
-        }
-        tmp += '/></div>';
-
-        inner.append(tmp);
-      }
-
-      inner.slick({
-        prevArrow: options.sliderPrevButton,
-        nextArrow: options.sliderNextButton
-      }).on('afterChange',function (e) {
-        overlay.trigger('zoomboxChanged');
-      })
-
-      if(options.listenKeys) {
-        $(document).on('keyup',function (event) {
-          if(event.key === 'Escape') {
-            overlay.trigger('zoomboxOverlayHiding');
-            overlay.fadeOut(options.fadeDuration,function () {
-              inner.slick('unslick');
-              overlay.trigger('zoomboxOverlayHidden');
-              overlay.remove();
-            });
-          } else if(event.key === 'ArrowRight') {
-            inner.slick('slickNext');
-            overlay.trigger('zoomboxChanged');
-          } else if(event.key === 'ArrowLeft') {
-            inner.slick('slickPrev');
-            overlay.trigger('zoomboxChanged');
-          }
-        })
-      }
-
-      overlay.trigger('zoomboxOverlayShowing');
-
-      overlay.fadeIn(options.fadeDuration,function () {
-        overlay.trigger('zoomboxOverlayShown');
-      });
-
-      setTimeout(function () {
-        if(options.centerImages) {
-          inner.find('.slick-slide').each(function (i,e,a) {
-            $(this).css('margin-top',(inner.outerHeight() - $(this).outerHeight()) / 2);
-          })
-        }
-      },50);
-
-      $(window).trigger('resize');
-
     } else {
       var overlay = $(document.body).append('<div id="' + options.containerId + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId);
-      var inner = overlay.find('.'+options.innerClass);
+    }
+    var inner = overlay.find('.'+options.innerClass);
 
-      if(options.closeOnBlurClick) {
-        overlay.on('click',function (event) {
-          if(!$(event.target).is('.slick-slide *, .slick-arrow, .slick-arrow *')) {
-            overlay.trigger('zoomboxOverlayHiding');
-            overlay.fadeOut(options.fadeDuration,function () {
+    if(options.closeOnBlurClick) {
+      overlay.on('click',function (event) {
+        if(!$(event.target).is('.slick-slide *, .slick-arrow, .slick-arrow *')) {
+          overlay.trigger('zoomboxOverlayHiding');
+          overlay.fadeOut(options.fadeDuration,function () {
+            if(options.temporary) {
+              inner.slick('unslick');
+              overlay.remove();
+            } else {
               inner.slick('slickUnfilter',0);
-              overlay.trigger('zoomboxOverlayHidden');
-            });
-          }
-        })
+            }
+            overlay.trigger('zoomboxOverlayHidden');
+          });
+        }
+      })
+    } else {
+      overlay.on('click',function (event) {
+        if($(event.target).is('.'+options.buttonClass)) {
+          overlay.trigger('zoomboxOverlayHiding');
+          overlay.fadeOut(options.fadeDuration,function () {
+            if(options.temporary) {
+              inner.slick('unslick');
+              overlay.remove();
+            } else {
+              inner.slick('slickUnfilter',0);
+            }
+            overlay.trigger('zoomboxOverlayHidden');
+          });
+        }
+      })
+    }
+
+    for (var i = 0; i < this.length; i++) {
+      if(options.forceSourceAttr) {
+        var src = $(this[i]).attr(options.forceSourceAttr);
       } else {
-        overlay.on('click',function (event) {
-          if($(event.target).is('.'+options.buttonClass)) {
-            overlay.trigger('zoomboxOverlayHiding');
-            overlay.fadeOut(options.fadeDuration,function () {
-              inner.slick('slickUnfilter',0);
-              overlay.trigger('zoomboxOverlayHidden');
-            });
-          }
-        })
+        if($(this[i]).is('a')) {
+          var src = $(this[i]).attr('href');
+        } else if($(this[i]).is('img')) {
+          var src = $(this[i]).attr('src');
+        } else {
+          var src = $(this[i]).data('src');
+        }
       }
 
-      for (var i = 0; i < this.length; i++) {
-        if(options.forceSourceAttr) {
-          var src = $(this[i]).attr(options.forceSourceAttr);
-        } else {
-          if($(this[i]).is('a')) {
-            var src = $(this[i]).attr('href');
-          } else if($(this[i]).is('img')) {
-            var src = $(this[i]).attr('src');
-          } else {
-            var src = $(this[i]).data('src');
-          }
-        }
+      var rel = $(this[i]).attr('rel');
 
-        var rel = $(this[i]).attr('rel');
+      var tmp = '<div class="' + options.wrapperClass + '"><img src="' + src + '" class="' + options.imageClass + '" ';
+      if(rel !== undefined && rel !== false && rel !== '') {
+        tmp += 'rel="' + rel + '"';
+      }
+      tmp += '/></div>';
 
-        var tmp = '<div class="' + options.wrapperClass + '"><img src="' + src + '" class="' + options.imageClass + '" ';
-        if(rel !== undefined && rel !== false && rel !== '') {
-          tmp += 'rel="' + rel + '"';
-        }
-        tmp += '/></div>';
+      inner.append(tmp);
 
-        inner.append(tmp);
-
+      if(!options.temporary) {
         $(this[i]).attr('data-index',i).on('click',function (event) {
           if($(this).is('a')) {
             event.preventDefault();
@@ -234,31 +154,54 @@
           $(window).trigger('resize');
         })
       }
+    }
 
-      inner.slick({
-        prevArrow: options.sliderPrevButton,
-        nextArrow: options.sliderNextButton
-      }).on('afterChange',function (e) {
-        overlay.trigger('zoomboxChanged');
-      })
+    inner.slick({
+      prevArrow: options.sliderPrevButton,
+      nextArrow: options.sliderNextButton
+    }).on('afterChange',function (e) {
+      overlay.trigger('zoomboxChanged');
+    })
 
-      if(options.listenKeys) {
-        $(document).on('keyup',function (event) {
-          if(event.key === 'Escape') {
-            overlay.trigger('zoomboxOverlayHiding');
-            overlay.fadeOut(options.fadeDuration,function () {
+    if(options.listenKeys) {
+      $(document).on('keyup',function (event) {
+        if(event.key === 'Escape') {
+          overlay.trigger('zoomboxOverlayHiding');
+          overlay.fadeOut(options.fadeDuration,function () {
+            if(options.temporary) {
+              inner.slick('unslick');
+              overlay.remove();
+            } else {
               inner.slick('slickUnfilter',0);
-              overlay.trigger('zoomboxOverlayHidden');
-            });
-          } else if(event.key === 'ArrowRight') {
-            inner.slick('slickNext');
-            overlay.trigger('zoomboxChanged');
-          } else if(event.key === 'ArrowLeft') {
-            inner.slick('slickPrev');
-            overlay.trigger('zoomboxChanged');
-          }
-        })
-      }
+            }
+            overlay.trigger('zoomboxOverlayHidden');
+          });
+        } else if(event.key === 'ArrowRight') {
+          inner.slick('slickNext');
+          overlay.trigger('zoomboxChanged');
+        } else if(event.key === 'ArrowLeft') {
+          inner.slick('slickPrev');
+          overlay.trigger('zoomboxChanged');
+        }
+      })
+    }
+
+    if(options.temporary) {
+      overlay.trigger('zoomboxOverlayShowing');
+
+      overlay.fadeIn(options.fadeDuration,function () {
+        overlay.trigger('zoomboxOverlayShown');
+      });
+
+      setTimeout(function () {
+        if(options.centerImages) {
+          inner.find('.slick-slide').each(function (i,e,a) {
+            $(this).css('margin-top',(inner.outerHeight() - $(this).outerHeight()) / 2);
+          })
+        }
+      },50);
+
+      $(window).trigger('resize');
     }
 
     if(options.enforceChaining) {
