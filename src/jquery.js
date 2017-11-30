@@ -164,8 +164,8 @@
     })
 
     if(options.listenKeys) {
-      $(document).on('keyup',function (event) {
-        if(event.key === 'Escape') {
+      var keyListener = function(event) {
+        if(event.key === 'Escape' || event.which == 27) {
           overlay.trigger('zoomboxOverlayHiding');
           overlay.fadeOut(options.fadeDuration,function () {
             if(options.temporary) {
@@ -176,14 +176,16 @@
             }
             overlay.trigger('zoomboxOverlayHidden');
           });
-        } else if(event.key === 'ArrowRight') {
+        } else if(event.key === 'ArrowRight' || event.which == 39) {
           inner.slick('slickNext');
           overlay.trigger('zoomboxChanged');
-        } else if(event.key === 'ArrowLeft') {
+        } else if(event.key === 'ArrowLeft' || event.which == 37) {
           inner.slick('slickPrev');
           overlay.trigger('zoomboxChanged');
         }
-      })
+      }
+
+      $(document).off('keyup',keyListener).on('keyup',keyListener);
     }
 
     if(options.temporary) {
