@@ -1,7 +1,6 @@
 {
   "name": "zoombox.js",
   "description": "An easy but working jQuery lightbox plugin.",
-  "version": "1.0.0",
   "main": [
     "src/jquery.js"
   ],
