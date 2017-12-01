@@ -43,17 +43,18 @@
     .slick-slide {
       float: left;
       outline: none !important;
+      margin: 5px;
 
       .zoombox-image {
         display: block;
         margin: 0 auto;
 
-        max-width: calc(100vw - 30px);
-        max-height: calc(100vh - 30px);
+        max-width: calc(100vw - 50px);
+        max-height: calc(100vh - 50px);
 
         @media (min-width: 768px) {
-          max-width: calc(100vw - 100px);
-          max-height: calc(100vh - 50px);
+          max-width: calc(100vw - 150px);
+          max-height: calc(100vh - 70px);
         }
       }
     }
