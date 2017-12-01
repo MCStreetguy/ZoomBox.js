@@ -28,6 +28,7 @@
     overflow: hidden;
     margin: 15px;
     height: calc(100% - 30px);
+    position: static;
 
     @media (min-width: 768px) {
       margin: 25px 50px;
