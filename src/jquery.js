@@ -36,10 +36,24 @@
   }
 
   var state = {
-    visible: false
+    visible: false,
+    currentSlide: undefined
   }
 
   $.fn.zoombox = function(options) {
+    if(typeof options === 'string') {
+      switch (options) {
+        case 'isVisible':
+          return state.visible;
+          break;
+        case 'getCurrentSlide':
+          return state.currentSlide;
+          break;
+        default:
+          return undefined;
+      }
+    }
+
     if(options !== undefined && typeof options === 'object') {
       for(var setting in defaultValues) {
         if(defaultValues.hasOwnProperty(setting) && (options[setting] === undefined || typeof defaultValues[setting] !== typeof options[setting])) {
@@ -132,6 +146,7 @@
           });
 
           inner.slick('slickGoTo',$(this).data('index'),true);
+          state.currentSlide = inner.slick('slickCurrentSlide');
 
           if($(this).attr('rel') !== undefined) {
             var rel = $(this).attr('rel');
@@ -186,6 +201,7 @@
       touchMove: !options.disableTouchMove,
       waitForAnimate: options.ignoreInputOnMove
     }).on('afterChange',function (e) {
+      state.currentSlide = inner.slick('slickCurrentSlide');
       if(state.visible) overlay.trigger('zoomboxChanged');
     })
 
@@ -239,3 +255,12 @@
   };
 
 }( jQuery ));
+
+window.zoombox = {
+  isVisible: function () {
+    return $('*').zoombox('isVisible');
+  },
+  getCurrentSlide: function () {
+    return $('*').zoombox('getCurrentSlide');
+  }
+}
