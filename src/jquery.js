@@ -35,6 +35,10 @@
     wrapperClass: 'zoombox-image-wrapper'
   }
 
+  var state = {
+    visible: false
+  }
+
   $.fn.zoombox = function(options) {
     if(options !== undefined && typeof options === 'object') {
       for(var setting in defaultValues) {
@@ -67,6 +71,7 @@
               overlay.remove();
             } else {
               inner.slick('slickUnfilter',0);
+              state.visible = false;
             }
             overlay.trigger('zoomboxOverlayHidden');
           });
@@ -82,6 +87,7 @@
               overlay.remove();
             } else {
               inner.slick('slickUnfilter',0);
+              state.visible = false;
             }
             overlay.trigger('zoomboxOverlayHidden');
           });
@@ -121,6 +127,7 @@
           overlay.trigger('zoomboxOverlayShowing');
 
           overlay.fadeIn(options.fadeDuration,function () {
+            state.visible = true;
             overlay.trigger('zoomboxOverlayShown');
           });
 
@@ -179,7 +186,7 @@
       touchMove: !options.disableTouchMove,
       waitForAnimate: options.ignoreInputOnMove
     }).on('afterChange',function (e) {
-      overlay.trigger('zoomboxChanged');
+      if(state.visible) overlay.trigger('zoomboxChanged');
     })
 
     if(options.listenKeys) {
@@ -191,6 +198,7 @@
               inner.slick('unslick');
               overlay.remove();
             } else {
+              state.visible = false;
               inner.slick('slickUnfilter',0);
             }
             overlay.trigger('zoomboxOverlayHidden');
