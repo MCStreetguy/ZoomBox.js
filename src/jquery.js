@@ -41,19 +41,6 @@
   }
 
   $.fn.zoombox = function(options) {
-    if(typeof options === 'string') {
-      switch (options) {
-        case 'isVisible':
-          return state.visible;
-          break;
-        case 'getCurrentSlide':
-          return state.currentSlide;
-          break;
-        default:
-          return undefined;
-      }
-    }
-
     if(options !== undefined && typeof options === 'object') {
       for(var setting in defaultValues) {
         if(defaultValues.hasOwnProperty(setting) && (options[setting] === undefined || typeof defaultValues[setting] !== typeof options[setting])) {
@@ -254,13 +241,13 @@
     }
   };
 
-}( jQuery ));
-
-window.zoombox = {
-  isVisible: function () {
-    return $('*').zoombox('isVisible');
-  },
-  getCurrentSlide: function () {
-    return $('*').zoombox('getCurrentSlide');
+  window.zoombox = {
+    isVisible: function () {
+      return state.visible;
+    },
+    getCurrentSlide: function () {
+      return state.currentSlide;
+    }
   }
-}
+
+}( jQuery ));
