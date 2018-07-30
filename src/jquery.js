@@ -146,7 +146,7 @@
           } else {
             var _this = this;
 
-            if (options.showAsGallery === false) {
+            if (options.showAsGallery == false) {
               if (options.forceSourceAttr) {
                 var src = $(_this).attr(options.forceSourceAttr);
               } else {
