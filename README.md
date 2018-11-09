@@ -16,5 +16,3 @@ $(function () {
   $('.my-img-class').zoombox();
 })
 ```
-
-**Visit the [Documentation](http://docs.mcstreetguy.de/ZoomBox.js/) for more information on usage and available options.**
