@@ -41,7 +41,6 @@
     visible: false,
     currentSlide: undefined,
     slideCount: undefined,
-
   }
 
   $.fn.zoombox = function(options) {
@@ -60,9 +59,9 @@
     }
 
     if(options.temporary) {
-      var overlay = $(document.body).append('<div id="' + options.containerId+'-temp' + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId+'-temp');
+      var overlay = $(document.body).append('<div id="' + options.containerId + '-temp' + '" class="zoombox-overlay"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#' + options.containerId + '-temp');
     } else {
-      var overlay = $(document.body).append('<div id="' + options.containerId + '"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#'+options.containerId);
+      var overlay = $(document.body).append('<div id="' + options.containerId + '" class="zoombox-overlay"><div class="' + options.buttonClass + '">&times;</div><div class="' + options.innerClass + '"></div></div>').find('#' + options.containerId);
     }
     var inner = overlay.find('.'+options.innerClass);
 
